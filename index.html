@@ -11,6 +11,49 @@
     <h1>Microsoft Sign-In Example</h1>
     <button id="signInButton">Sign In with Microsoft</button>
   </div>
-  <script type="module" src="script.js"></script>
 </body>
+<!-- Add this in your HTML head section -->
+<script src="https://alcdn.msauth.net/browser/2.0.0/js/msal-browser.min.js"></script>
+<script>
+    // script.js
+
+const msalConfig = {
+  auth: {
+    clientId: 'c75726fa-2f09-4a02-b9c5-7683e091bc6e', // Replace with your client ID
+    authority: 'https://login.microsoftonline.com/f8cdef31-a31e-4b4a-93e4-5f571e91255a',
+    redirectUri: 'https://cloud-tech.vercel.app/', // Replace with your redirect URI
+  },
+  cache: {
+    cacheLocation: 'localStorage',
+    storeAuthStateInCookie: true,
+  },
+};
+
+const myMSALObj = new msal.PublicClientApplication(msalConfig);
+
+const loginRequest = {
+  scopes: ['user.read'],
+};
+
+function handleResponse(response) {
+  // Handle the authentication response
+  if (response !== null) {
+    console.log(response);
+    // You can perform additional tasks here after successful login
+  } else {
+    console.error('Authentication failed');
+  }
+}
+
+function signIn() {
+  myMSALObj.loginPopup(loginRequest)
+    .then(handleResponse)
+    .catch(error => {
+      console.error(error);
+    });
+}
+
+document.getElementById('signInButton').addEventListener('click', signIn);
+
+</script>
 </html>
