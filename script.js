@@ -1,40 +1,68 @@
-// script.js
 
-const msalConfig = {
-    auth: {
-      clientId: 'YOUR_CLIENT_ID', // Replace with your client ID
-      authority: 'https://login.microsoftonline.com/common',
-      redirectUri: 'YOUR_REDIRECT_URI', // Replace with your redirect URI
-    },
-    cache: {
-      cacheLocation: 'localStorage',
-      storeAuthStateInCookie: true,
-    },
-  };
-  
-  const myMSALObj = new msal.PublicClientApplication(msalConfig);
-  
-  const loginRequest = {
-    scopes: ['user.read'],
-  };
-  
-  function handleResponse(response) {
-    // Handle the authentication response
-    if (response !== null) {
-      console.log(response);
-      // You can perform additional tasks here after successful login
-    } else {
-      console.error('Authentication failed');
-    }
-  }
-  
-  function signIn() {
-    myMSALObj.loginPopup(loginRequest)
-      .then(handleResponse)
-      .catch(error => {
-        console.error(error);
+  // Function to send signup OTP
+  function sendOTP() {
+    const phoneNumber = document.getElementById('phone').value;
+    const appVerifier = new firebase.auth.RecaptchaVerifier('signup-form', {
+      'size': 'invisible',
+      'callback': (response) => {
+        // reCAPTCHA solved, allow signInWithPhoneNumber.
+        sendVerificationCode(phoneNumber, appVerifier);
+      }
+    });
+
+    auth.signInWithPhoneNumber(phoneNumber, appVerifier)
+      .then((confirmationResult) => {
+        window.confirmationResult = confirmationResult;
+      })
+      .catch((error) => {
+        console.error("Error sending OTP:", error);
       });
   }
-  
-  document.getElementById('signInButton').addEventListener('click', signIn);
-  
+
+  // Function to verify signup OTP
+  function verifyOTP() {
+    const otp = document.getElementById('otp').value;
+    const confirmationResult = window.confirmationResult;
+
+    confirmationResult.confirm(otp)
+      .then((result) => {
+        console.log("Signup successful:", result.user);
+      })
+      .catch((error) => {
+        console.error("Error verifying OTP:", error);
+      });
+  }
+
+  // Function to send login OTP
+  function sendLoginOTP() {
+    const phoneNumber = document.getElementById('login-phone').value;
+    const appVerifier = new firebase.auth.RecaptchaVerifier('login-form', {
+      'size': 'invisible',
+      'callback': (response) => {
+        // reCAPTCHA solved, allow signInWithPhoneNumber.
+        sendVerificationCode(phoneNumber, appVerifier);
+      }
+    });
+
+    auth.signInWithPhoneNumber(phoneNumber, appVerifier)
+      .then((confirmationResult) => {
+        window.confirmationResult = confirmationResult;
+      })
+      .catch((error) => {
+        console.error("Error sending login OTP:", error);
+      });
+  }
+
+  // Function to verify login OTP
+  function verifyLoginOTP() {
+    const otp = document.getElementById('login-otp').value;
+    const confirmationResult = window.confirmationResult;
+
+    confirmationResult.confirm(otp)
+      .then((result) => {
+        console.log("Login successful:", result.user);
+      })
+      .catch((error) => {
+        console.error("Error verifying login OTP:", error);
+      });
+  }

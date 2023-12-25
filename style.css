@@ -2,7 +2,7 @@ body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    display: flex;
+    display: grid;
     align-items: center;
     justify-content: center;
     height: 100vh;
@@ -23,8 +23,37 @@ body {
     border-radius: 5px;
     outline: none;
   }
+  input[type='button']{
+    width: 95%;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+  }
+  input[type='button']:hover{
+    opacity: 0.7;
+  }
   
   button:hover {
     background-color: #1f60c4;
   }
+  input{
+    padding: 8px;
+    margin: 5px;
+    width: 90%;
+  }
+  input[type="button"]{
+    background-color: steelblue;
+  }
+  form{
+    display: grid;
+  }
+  p{
+    font-weight: 500;
+  }
   
+  select{
+    width: 95%;
+    margin-left: 7px;
+    padding: 10px;
+  }
